@@ -79,7 +79,7 @@
   }
 
   .book-cover_wide {
-    @apply xs:w-[296px] w-[256px] xs:h-[404px] h-[354px];
+    @apply xs:w-[296px] w-[256px] xs:h-[404px] h-88.5;
   }
 
   /* Book List */
