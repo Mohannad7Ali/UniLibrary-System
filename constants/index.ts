@@ -55,7 +55,7 @@ export const FIELD_TYPES = {
   password: "password",
 };
 
-export const sampleBooks = [
+export const sampleBooks: Book[] = [
   {
     id: 1,
     title: "The Midnight Library",
