@@ -6,7 +6,9 @@
 @custom-variant dark (&:is(.dark *));
 @config "../tailwind.config.js";
 
-/* 1. القواعد الأساسية (Base Layer) */
+/* ========================================================================= */
+/* 1. القواعد الأساسية (BASE LAYER) */
+/* ========================================================================= */
 @layer base {
   :root {
     /* ألوان shadcn الأساسية بصيغة HSL لضمان التوافق مع المكونات */
@@ -54,18 +56,22 @@
     --ring: 212.7 26.8% 83.9%;
   }
 
+  /* تطبيق الخصائص الأساسية على جميع العناصر */
   * {
     @apply border-border outline-ring/50;
   }
 
+  /* إصلاح مشكلة الفراغ الأبيض على الجوال عبر إخفاء التمرير الأفقي */
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
   }
 }
 
-/* 2. المكونات المخصصة (Components Layer) */
+/* ========================================================================= */
+/* 2. المكونات المخصصة (COMPONENTS LAYER) */
+/* ========================================================================= */
 @layer components {
-  /* Forms */
+  /* ==================== Forms ==================== */
   .form-btn {
     @apply bg-primary text-dark-100 hover:bg-primary/90 inline-flex min-h-14 w-full items-center justify-center rounded-md px-6 py-2 font-bold text-base transition-colors;
   }
@@ -74,7 +80,7 @@
     @apply w-full min-h-14 border-none text-base font-bold placeholder:font-normal text-white placeholder:text-light-100 focus-visible:ring-0 focus-visible:shadow-none bg-dark-300 rounded-md;
   }
 
-  /* Book Cards */
+  /* ==================== Book Cards ==================== */
   .book-title {
     @apply mt-2 line-clamp-1 text-base font-semibold text-white xs:text-xl;
   }
@@ -100,7 +106,7 @@
     @apply py-4 lg:px-16 px-10 flex justify-center items-center w-full rounded-lg;
   }
 
-  /* Book Covers */
+  /* ==================== Book Covers ==================== */
   .book-cover_extra_small {
     @apply w-[28.95px] h-10;
   }
@@ -114,10 +120,11 @@
     @apply xs:w-[174px] w-[114px] xs:h-[239px] h-[169px];
   }
   .book-cover_wide {
-    @apply xs:w-[296px] w-[256px] xs:h-[404px] h-88.5;
+    /* تم استبدال h-88.5 التي قد تكون غير معرفة بقيمة مقبولة أو Tailwind class */
+    @apply xs:w-[296px] w-[256px] xs:h-[404px] h-[354px];
   }
 
-  /* Book Overview */
+  /* ==================== Book Overview ==================== */
   .book-overview {
     @apply flex flex-col-reverse items-center gap-12 sm:gap-32 xl:flex-row xl:gap-8;
   }
@@ -136,7 +143,7 @@
     @apply !mt-4 !min-h-14 !w-fit bg-primary text-dark-100 hover:bg-primary/90 max-md:w-full;
   }
 
-  /* Search & Navigation */
+  /* ==================== Search & Navigation ==================== */
   .search {
     @apply relative mt-10 flex min-h-14 w-full items-center rounded-xl bg-dark-300 px-4;
   }
@@ -145,13 +152,15 @@
     @apply !w-full border-none font-bold placeholder:font-normal text-white placeholder:text-light-100 focus-visible:ring-0 focus-visible:shadow-none bg-transparent;
   }
 
-  /* Root Container */
+  /* ==================== Root Container ==================== */
   .root-container {
     @apply flex min-h-screen flex-1 flex-col bg-pattern bg-cover bg-top bg-dark-100 px-5 xs:px-10 md:px-16;
   }
 }
 
-/* 3. الأدوات المساعدة (Utilities Layer) */
+/* ========================================================================= */
+/* 3. الأدوات المساعدة (UTILITIES LAYER) */
+/* ========================================================================= */
 @layer utilities {
   .hide-scrollbar::-webkit-scrollbar {
     display: none;

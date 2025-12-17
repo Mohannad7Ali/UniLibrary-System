@@ -12,7 +12,7 @@ const variantStyles: Record<BookCoverVariant, string> = {
 };
 interface BookCoverProps {
   className?: string;
-  variant: BookCoverVariant;
+  variant?: BookCoverVariant;
   coverColor: string;
   coverUrl: string;
 }

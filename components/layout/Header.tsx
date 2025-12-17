@@ -6,14 +6,14 @@ import { cn } from "@/lib/utils";
 export default function Header() {
   const pathName = usePathname();
   return (
-    <header className="flex flex-row  items-center gap-20 my-10 text-white">
+    <header className="flex flex-row  justify-between my-10 text-white">
       <Link href="/">
-        <div className="text-2xl font-bold flex items-center gap-3 cursor-pointer ">
+        <div className="text-sm md:text-2xl font-bold flex items-center gap-3 cursor-pointer ">
           <Image src="/icons/logo.svg" alt="Logo" width={50} height={50} />
           UniLibrary
         </div>
       </Link>
-      <ul className="flex items-center gap-8">
+      <ul className="flex items-center gap-2 flex-wrap md:gap-8 ">
         <li>
           <Link
             href="/books"

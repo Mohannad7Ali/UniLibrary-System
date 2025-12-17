@@ -58,6 +58,7 @@ export const FIELD_TYPES = {
 export const sampleBooks: Book[] = [
   {
     id: 1,
+    isLoanedBook: true,
     title: "The Midnight Library",
     author: "Matt Haig",
     genre: "Fantasy / Fiction",
