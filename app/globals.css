@@ -73,11 +73,11 @@
 @layer components {
   /* ==================== Forms ==================== */
   .form-btn {
-    @apply bg-primary text-dark-100 hover:bg-primary/90 inline-flex min-h-14 w-full items-center justify-center rounded-md px-6 py-2 font-bold text-base transition-colors;
+    @apply bg-primary text-dark-100 cursor-pointer hover:bg-primary/90 inline-flex min-h-14 w-full items-center justify-center rounded-md px-6 py-2 font-bold text-base transition-colors;
   }
 
   .form-input {
-    @apply w-full min-h-14 border-none text-base font-bold placeholder:font-normal text-white placeholder:text-light-100 focus-visible:ring-0 focus-visible:shadow-none bg-dark-300 rounded-md;
+    @apply w-full min-h-14 border-none text-base font-bold placeholder:font-normal  text-white placeholder:text-light-100 focus-visible:ring-0 focus-visible:shadow-none  rounded-md;
   }
 
   /* ==================== Book Cards ==================== */
@@ -94,7 +94,7 @@
   }
 
   .book-btn {
-    @apply bg-dark-600 mt-3 min-h-14 w-full font-bebas-neue text-base text-primary hover:bg-dark-500 transition-all;
+    @apply bg-dark-600 mt-3 min-h-14 w-full font-bebas-neue text-base cursor-pointer text-primary hover:bg-dark-500 transition-all;
   }
 
   .borrowed-book {
@@ -140,7 +140,7 @@
   }
 
   .book-overview_btn {
-    @apply !mt-4 !min-h-14 !w-fit bg-primary text-dark-100 hover:bg-primary/90 max-md:w-full;
+    @apply !mt-4 !min-h-14 !w-fit cursor-pointer bg-primary text-dark-100 hover:bg-primary/90 max-md:w-full;
   }
 
   /* ==================== Search & Navigation ==================== */
