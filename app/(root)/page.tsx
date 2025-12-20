@@ -1,7 +1,8 @@
 import BookOverview from "@/components/BookOverview";
 import Booklist from "@/components/BookList";
 import { sampleBooks } from "@/constants";
-export default function Home() {
+
+export default async function Home() {
   return (
     <div>
       <BookOverview book={sampleBooks[0]} />

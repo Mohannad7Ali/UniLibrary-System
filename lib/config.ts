@@ -6,6 +6,7 @@ const config = {
       privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
     },
     apiEndpoint: process.env.API_ENDPOINT,
+    databaseUrl: process.env.NEON_DATABASE_URL,
   },
 };
 export default config;
