@@ -10,7 +10,10 @@ import {
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-const ImageUpload = () => {
+interface Props {
+  onUpload: (url: string) => void;
+}
+const ImageUpload = ({ onUpload }: Props) => {
   const [progress, setProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -61,6 +64,7 @@ const ImageUpload = () => {
       setProgress(100);
       setTimeout(resetForm, 800);
       toast("Your image uploaded successfully");
+      onUpload(response.url);
     } catch (error) {
       if (error instanceof ImageKitAbortError) {
         console.error("Upload aborted");
@@ -89,7 +93,6 @@ const ImageUpload = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    toast("Your image removed successfully");
   };
 
   return (

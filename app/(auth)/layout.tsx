@@ -1,10 +1,16 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 import Image from "next/image";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+  if (session) {
+    redirect("/");
+  }
   return (
     <main className="auth-container">
       <section className="auth-form">
@@ -16,7 +22,7 @@ export default function RootLayout({
           <div>{children}</div>
         </div>
       </section>
-      <section className="sticky h-40 w-full sm:top-0 sm:h-screen sm:flex-1">
+      <section className="sticky h-0 w-full sm:top-0 sm:h-screen sm:flex-1">
         <Image
           src="/images/auth-illustration.png"
           alt="auth illutstration"

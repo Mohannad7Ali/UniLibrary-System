@@ -1,5 +1,6 @@
 "use client";
 import AuthForm from "@/components/AuthForm";
+import { signInWithCredentials } from "@/lib/actions/auth";
 import { signInSchema } from "@/lib/validations";
 
 export default function SignIn() {
@@ -11,10 +12,7 @@ export default function SignIn() {
         email: "",
         password: "",
       }}
-      onSubmit={async () => {
-        console.log("sing in ");
-        return { success: true };
-      }}
+      onSubmit={signInWithCredentials}
     />
   );
 }

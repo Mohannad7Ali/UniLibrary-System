@@ -24,8 +24,11 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import ImageUpload from "./auth/ImageUpload";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-// 1. استخدام z.Schema<T> هو الخيار الأكثر أماناً وتوافقاً مع Generics
+//------------------------------------------------------------------------------------
+
 interface AuthFormProps<T extends FieldValues> {
   type: "signin" | "signup";
   schema: z.Schema<T>;
@@ -46,9 +49,22 @@ function AuthForm<T extends FieldValues>({
     resolver: zodResolver(schema) as unknown as Resolver<T>,
     defaultValues: defaultValues as DefaultValues<T>,
   });
+  const router = useRouter();
   const isSignIn = type === "signin";
-  const handleSubmit: SubmitHandler<T> = async (data) => {
-    await onSubmit(data);
+  const handleSubmit: SubmitHandler<T> = async (data: T) => {
+    const result = await onSubmit(data);
+    if (result.success) {
+      toast("Success", {
+        description: isSignIn
+          ? "You have successfully signed in"
+          : "You have successfully signed up",
+      });
+      router.push("/");
+    } else {
+      toast(`Error ${isSignIn ? "signing in " : "signing up"}`, {
+        description: result.error ?? "an error occurred",
+      });
+    }
   };
 
   return (
@@ -64,7 +80,7 @@ function AuthForm<T extends FieldValues>({
           : "Please complete all fields and upload a valid university ID to gain access to the library"}
       </p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           {Object.keys(defaultValues).map((field) => {
             return (
               <FormField
@@ -78,7 +94,11 @@ function AuthForm<T extends FieldValues>({
                     </FormLabel>
                     <FormControl>
                       {field.name === "universityCard" ? (
-                        <ImageUpload />
+                        <ImageUpload
+                          onUpload={(url) => {
+                            field.onChange(url);
+                          }}
+                        />
                       ) : (
                         <Input
                           required
