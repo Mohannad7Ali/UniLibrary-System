@@ -7,6 +7,10 @@ const config = {
     },
     apiEndpoint: process.env.API_ENDPOINT,
     databaseUrl: process.env.NEON_DATABASE_URL,
+    upstash: {
+      radisUrl: process.env.UPSTASH_REDIS_REST_URL,
+      radisToken: process.env.UPSTASH_REDIS_REST_TOKEN,
+    },
   },
 };
 export default config;
