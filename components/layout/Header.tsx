@@ -3,11 +3,12 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn, getIntials } from "@/lib/utils";
-import { useSession } from "next-auth/react";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-export default function Header() {
+import { Session } from "next-auth";
+export default function Header({ session }: { session: Session }) {
   const pathName = usePathname();
-  const session = useSession();
+
   return (
     <header className="flex flex-row  justify-between items-center my-10 text-white">
       <Link href="/">
@@ -17,12 +18,12 @@ export default function Header() {
         </div>
       </Link>
       <ul className="flex items-center gap-2 flex-wrap md:gap-8 ">
-        {session.data?.user && (
+        {session?.user && (
           <li>
             <Link href="/profile">
               <Avatar>
                 <AvatarFallback className="text-gray-400 bg-indigo-900 font-bold text-center flex justify-center items-center">
-                  {getIntials(session?.data?.user.name) || "X"}
+                  {getIntials(session?.user.name) || "X"}
                 </AvatarFallback>
               </Avatar>
             </Link>

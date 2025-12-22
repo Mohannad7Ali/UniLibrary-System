@@ -12,7 +12,7 @@ export type signUpFormData = z.infer<typeof signUpSchema>;
 //   password: z.string().min(8),
 // });
 export type signInFormData = z.infer<typeof signInSchema>;
-import { object, string } from "zod";
+import { object } from "zod";
 
 export const signInSchema = object({
   email: z.string().min(1, "Email is required").email("Invalid email"),

@@ -10,6 +10,8 @@ const config = {
     upstash: {
       radisUrl: process.env.UPSTASH_REDIS_REST_URL,
       radisToken: process.env.UPSTASH_REDIS_REST_TOKEN,
+      qstashUrl: process.env.QSTASH_URL,
+      qstashToken: process.env.QSTASH_TOKEN,
     },
   },
 };
