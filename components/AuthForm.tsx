@@ -80,7 +80,7 @@ function AuthForm<T extends FieldValues>({
           : "Please complete all fields and upload a valid university ID to gain access to the library"}
       </p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           {Object.keys(defaultValues).map((field) => {
             return (
               <FormField
