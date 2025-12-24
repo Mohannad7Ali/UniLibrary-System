@@ -25,14 +25,14 @@ export default function BookOverview({ book }: { book: Book }) {
           <p>
             total Books:{" "}
             <span className="font-semibold text-light-200">
-              {book.total_copies}
+              {book.totalCopies}
             </span>
           </p>
           <p>
             Available Books:{" "}
             <span className="font-semibold text-light-200">
               {" "}
-              {book.available_copies}
+              {book.availableCopies}
             </span>
           </p>
         </div>
@@ -47,14 +47,14 @@ export default function BookOverview({ book }: { book: Book }) {
           <BookCover
             variant="wide"
             className="z-10"
-            coverUrl={book.cover}
-            coverColor={book.color}
+            coverUrl={book.coverUrl}
+            coverColor={book.coverColor}
           />
           <div className="absolute left-16 top-10 rotate-12 opacity-40 max-sm:hidden">
             <BookCover
               variant="wide"
-              coverUrl={book.cover}
-              coverColor={book.color}
+              coverUrl={book.coverUrl}
+              coverColor={book.coverColor}
             />
           </div>
         </div>

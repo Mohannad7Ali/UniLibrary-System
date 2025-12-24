@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+
 import BookCoverSvg from "./BookCoverSvg";
+import { Image } from "@imagekit/next";
 
 type BookCoverVariant = "small" | "extraSmall" | "medium" | "regular" | "wide";
 const variantStyles: Record<BookCoverVariant, string> = {
@@ -33,13 +34,14 @@ export default function BookCover({
       <BookCoverSvg coverColor={coverColor} />
       <div
         className="absolute z-10"
-        style={{ left: "12%", width: "87.5%", height: "88%" }}
+        style={{ left: "12%", top: "2%", width: "84.5%", height: "84%" }}
       >
         <Image
           src={coverUrl}
           alt="Book cover"
           fill
           className="rounded-sm object-fill"
+          loading="lazy"
         />
       </div>
     </div>

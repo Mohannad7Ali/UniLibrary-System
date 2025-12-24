@@ -11,7 +11,7 @@ export default function Booklist({ title, containerClassName, books }: Props) {
       <h2 className="font-bebas-neue text-4xl text-light-100">{title}</h2>
       <ul className="flex gap-16 flex-wrap mt-10">
         {books.map((book: Book) => {
-          return <BookCard key={book.title} book={book} />;
+          return <BookCard key={book.id} book={book} />;
         })}
       </ul>
     </section>
