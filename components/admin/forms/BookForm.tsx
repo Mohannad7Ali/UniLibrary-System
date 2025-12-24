@@ -22,6 +22,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
 import ColorPicker from "../ColorPicker";
+import { createBook } from "@/lib/actions/admin/book";
+import { toast } from "sonner";
+import { useState } from "react";
+import { LoaderPinwheel } from "lucide-react";
+
 //------------------------------------------------------------------------------------
 
 interface BookFormProps extends Partial<Book> {
@@ -46,10 +51,21 @@ function BookForm({ type, ...book }: BookFormProps) {
       summary: "",
     },
   });
-  // const router = useRouter();
+  const router = useRouter();
+  const [isCreating, setIsCreating] = useState(false);
   // const isUpdate = type === "update";
   const handleSubmit = async (values: z.infer<typeof bookSchema>) => {
-    console.log(values);
+    setIsCreating(true);
+    const result = await createBook(values);
+    if (result.success) {
+      toast.success(`Book created successfully`);
+      setIsCreating(false);
+
+      router.push(`/admin/books/${result.data.id}`);
+    } else {
+      setIsCreating(false);
+      toast.error(result.error as string);
+    }
   };
 
   return (
@@ -262,8 +278,19 @@ function BookForm({ type, ...book }: BookFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="book-form_btn text-white">
-          Add Book to Library
+        <Button
+          type="submit"
+          className="book-form_btn text-white"
+          disabled={isCreating}
+        >
+          {isCreating ? (
+            <div className="flex items-center gap-4">
+              <LoaderPinwheel className="size-4 animate-spin" />
+              Creating Book ...
+            </div>
+          ) : (
+            "Add Book to Library"
+          )}
         </Button>
       </form>
     </Form>
