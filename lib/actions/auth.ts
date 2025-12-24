@@ -8,7 +8,7 @@ import { signIn } from "@/auth";
 import { headers } from "next/headers";
 import { ratelimit } from "../rateLimit";
 import { redirect } from "next/navigation";
-import { triggerSignupWorkflow } from "../workflow";
+// import { triggerSignupWorkflow } from "../workflow";
 
 export const signInWithCredentials = async (
   params: Pick<AuthCredentials, "email" | "password">

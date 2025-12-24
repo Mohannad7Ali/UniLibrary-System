@@ -2,7 +2,7 @@
 
 import { upload, Video, buildSrc, Image as IkImage } from "@imagekit/next";
 import NextImage from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, UploadCloud, X } from "lucide-react";
 import config from "@/lib/config";
@@ -14,6 +14,7 @@ interface Props {
   folder: string;
   variant: "dark" | "light";
   onUpload: (url: string) => void;
+  value?: string; // default value (edit mode)
 }
 
 const IK_URL_ENDPOINT = config.env.imageKit.urlEndpoint;
@@ -25,21 +26,22 @@ const FileUpload = ({
   accept,
   type,
   placeholder,
+  value,
 }: Props) => {
   const [progress, setProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
+
+  // ✅ initial value without useEffect
+  const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(
+    value ?? null
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /* -------------------- STYLES -------------------- */
   const styles = {
-    container:
-      variant === "dark"
-        ? "bg-dark-300"
-        : "bg-light-600 border-gray-100 border",
     button:
       variant === "dark"
         ? "bg-dark-400 text-light-100 hover:bg-dark-500"
@@ -62,12 +64,12 @@ const FileUpload = ({
     }
 
     if (type === "image" && file.size > 20 * 1024 * 1024) {
-      toast.error("File size too large (Max 20MB)");
+      toast.error("Max image size is 20MB");
       return false;
     }
 
     if (type === "video" && file.size > 50 * 1024 * 1024) {
-      toast.error("File size too large (Max 50MB)");
+      toast.error("Max video size is 50MB");
       return false;
     }
 
@@ -92,27 +94,25 @@ const FileUpload = ({
     try {
       const authData = await authenticator();
 
-      const response = await upload({
+      const res = await upload({
         file: selectedFile,
         fileName: selectedFile.name,
         folder,
         useUniqueFileName: true,
         ...authData,
-        onProgress: (e) => {
-          setProgress((e.loaded / e.total) * 100);
-        },
+        onProgress: (e) => setProgress((e.loaded / e.total) * 100),
       });
 
-      setUploadedFileUrl(response.filePath);
+      setUploadedFileUrl(res.filePath);
+      onUpload(res.filePath);
       setProgress(100);
-      onUpload(response.filePath);
 
       toast.success(
         `${type === "image" ? "Image" : "Video"} uploaded successfully`
       );
     } catch (err) {
       console.error(err);
-      toast.error("Upload failed, please try again");
+      toast.error("Upload failed");
       setProgress(0);
     } finally {
       setIsUploading(false);
@@ -122,20 +122,16 @@ const FileUpload = ({
   /* -------------------- RESET -------------------- */
   const resetForm = () => {
     if (preview) URL.revokeObjectURL(preview);
+
     setSelectedFile(null);
     setPreview(null);
     setUploadedFileUrl(null);
     setProgress(0);
     setIsUploading(false);
+    onUpload("");
+
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
-
-  /* -------------------- CLEANUP -------------------- */
-  useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
 
   return (
     <div className="w-full space-y-4">
@@ -143,8 +139,8 @@ const FileUpload = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept={accept}
         hidden
+        accept={accept}
         disabled={isUploading}
         onChange={(e) => {
           const file = e.target.files?.[0];
@@ -155,16 +151,11 @@ const FileUpload = ({
       />
 
       {/* Select */}
-      {!selectedFile && (
+      {!selectedFile && !uploadedFileUrl && (
         <button
           type="button"
-          disabled={isUploading}
           onClick={() => fileInputRef.current?.click()}
-          className={`flex flex-col items-center justify-center w-full min-h-[120px] gap-2 rounded-xl border-2 border-dashed transition disabled:opacity-50 ${
-            variant === "dark"
-              ? "border-dark-400 bg-dark-300 hover:border-light-400"
-              : "border-gray-200 bg-light-600 hover:border-primary-admin/40"
-          }`}
+          className="flex flex-col items-center justify-center w-full min-h-[120px] gap-2 rounded-xl border-2 border-dashed transition"
         >
           <UploadCloud className={`size-8 ${styles.placeholder}`} />
           <p className={`text-sm font-medium ${styles.placeholder}`}>
@@ -174,9 +165,9 @@ const FileUpload = ({
       )}
 
       {/* Preview */}
-      {selectedFile && (
+      {(selectedFile || uploadedFileUrl) && (
         <div className="space-y-4">
-          <div className="relative aspect-video rounded-xl overflow-hidden  max-w-[420px] border">
+          <div className="relative aspect-video max-w-[420px] w-full rounded-xl overflow-hidden border">
             {isUploading && (
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-20">
                 <Loader2 className="size-8 text-white animate-spin" />
@@ -205,9 +196,8 @@ const FileUpload = ({
                   className="object-cover"
                 />
               ) : (
-                <Video
-                  urlEndpoint={IK_URL_ENDPOINT}
-                  src={uploadedFileUrl}
+                <video
+                  src={`${IK_URL_ENDPOINT}${uploadedFileUrl}`}
                   controls
                   className="w-full h-full"
                   poster={buildSrc({
@@ -216,7 +206,6 @@ const FileUpload = ({
                   })}
                 />
               ))}
-
             {!uploadedFileUrl && (
               <button
                 onClick={resetForm}
@@ -227,28 +216,21 @@ const FileUpload = ({
             )}
           </div>
 
-          <div className="flex justify-between items-center">
-            <p className={`text-xs font-semibold ${styles.text}`}>
-              {uploadedFileUrl ? "Uploaded file" : selectedFile.name}
-            </p>
-
-            {!uploadedFileUrl && (
-              <button
-                type="button"
-                onClick={handleUpload}
-                disabled={isUploading}
-                className={`px-6 py-2 rounded-lg font-bold text-sm ${styles.button}`}
-              >
-                {isUploading ? "Uploading..." : "Upload"}
-              </button>
-            )}
-          </div>
+          {!uploadedFileUrl && (
+            <button
+              onClick={handleUpload}
+              disabled={isUploading}
+              className={`px-6 py-2 rounded-lg font-bold text-sm ${styles.button}`}
+            >
+              {isUploading ? "Uploading..." : "Upload"}
+            </button>
+          )}
         </div>
       )}
 
       {/* Progress */}
       {progress > 0 && progress < 100 && (
-        <div className="w-full space-y-1">
+        <div className="space-y-1">
           <div className="flex justify-between text-[10px] text-slate-400">
             <span>Progress</span>
             <span>{Math.round(progress)}%</span>

@@ -109,6 +109,7 @@ function AuthForm<T extends FieldValues>({
                           onUpload={(url) => {
                             field.onChange(url);
                           }}
+                          value={field.value}
                         />
                       ) : (
                         <Input

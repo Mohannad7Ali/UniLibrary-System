@@ -21,6 +21,7 @@ import { bookSchema } from "@/lib/validations";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
+import ColorPicker from "../ColorPicker";
 //------------------------------------------------------------------------------------
 
 interface BookFormProps extends Partial<Book> {
@@ -176,6 +177,7 @@ function BookForm({ type, ...book }: BookFormProps) {
                   variant="light"
                   folder="books/covers"
                   onUpload={(url) => field.onChange(url)}
+                  value={field.value}
                 />
               </FormControl>
               <FormMessage />
@@ -191,12 +193,7 @@ function BookForm({ type, ...book }: BookFormProps) {
                 Primary Color
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  required
-                  placeholder="Primary Color"
-                  className="book-form_input"
-                />
+                <ColorPicker onPickerChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -238,6 +235,7 @@ function BookForm({ type, ...book }: BookFormProps) {
                   variant="light"
                   folder="books/videos"
                   onUpload={(url) => field.onChange(url)}
+                  value={field.value}
                 />
               </FormControl>
               <FormMessage />
