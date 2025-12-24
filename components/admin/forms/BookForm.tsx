@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { bookSchema } from "@/lib/validations";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import FileUpload from "@/components/FileUpload";
 //------------------------------------------------------------------------------------
 
 interface BookFormProps extends Partial<Book> {
@@ -168,12 +169,13 @@ function BookForm({ type, ...book }: BookFormProps) {
                 Book Image
               </FormLabel>
               <FormControl>
-                {/* file upload */}
-                <Input
-                  {...field}
-                  required
-                  placeholder="Book Image URL"
-                  className="book-form_input"
+                <FileUpload
+                  type="image"
+                  accept="image/*"
+                  placeholder="Upload a book cover"
+                  variant="light"
+                  folder="books/covers"
+                  onUpload={(url) => field.onChange(url)}
                 />
               </FormControl>
               <FormMessage />
@@ -229,12 +231,13 @@ function BookForm({ type, ...book }: BookFormProps) {
                 Book Trailer
               </FormLabel>
               <FormControl>
-                {/* file upload */}
-                <Input
-                  {...field}
-                  required
-                  placeholder="Book Image URL"
-                  className="book-form_input"
+                <FileUpload
+                  type="video"
+                  accept="video/*"
+                  placeholder="Upload a book trailer"
+                  variant="light"
+                  folder="books/videos"
+                  onUpload={(url) => field.onChange(url)}
                 />
               </FormControl>
               <FormMessage />

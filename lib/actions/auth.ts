@@ -82,7 +82,7 @@ export const signUp = async (params: AuthCredentials) => {
       universityCard,
     });
     await signInWithCredentials({ email, password });
-    await triggerSignupWorkflow(email);
+    // await triggerSignupWorkflow(email);
 
     return { success: true };
   } catch (error) {

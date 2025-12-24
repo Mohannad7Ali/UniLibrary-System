@@ -23,9 +23,11 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
-import ImageUpload from "./auth/ImageUpload";
+import FileUpload from "./FileUpload";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 //------------------------------------------------------------------------------------
 
@@ -49,9 +51,11 @@ function AuthForm<T extends FieldValues>({
     resolver: zodResolver(schema) as unknown as Resolver<T>,
     defaultValues: defaultValues as DefaultValues<T>,
   });
+  const [IsSigningUp, setIsSigningUp] = useState(false);
   const router = useRouter();
   const isSignIn = type === "signin";
   const handleSubmit: SubmitHandler<T> = async (data: T) => {
+    setIsSigningUp(true);
     const result = await onSubmit(data);
     if (result.success) {
       toast("Success", {
@@ -60,10 +64,12 @@ function AuthForm<T extends FieldValues>({
           : "You have successfully signed up",
       });
       router.push("/");
+      setIsSigningUp(false);
     } else {
       toast(`Error ${isSignIn ? "signing in " : "signing up"}`, {
         description: result.error ?? "an error occurred",
       });
+      setIsSigningUp(false);
     }
   };
 
@@ -94,7 +100,12 @@ function AuthForm<T extends FieldValues>({
                     </FormLabel>
                     <FormControl>
                       {field.name === "universityCard" ? (
-                        <ImageUpload
+                        <FileUpload
+                          placeholder="Upload your ID"
+                          folder="ids"
+                          variant="dark"
+                          accept="image/*"
+                          type="image"
                           onUpload={(url) => {
                             field.onChange(url);
                           }}
@@ -118,7 +129,23 @@ function AuthForm<T extends FieldValues>({
             );
           })}
 
-          <Button type="submit">{isSignIn ? "Sign In" : "Sign Up"}</Button>
+          <Button
+            type="submit"
+            disabled={IsSigningUp} // تعطيل الزر إذا كانت الحالة true
+            className="w-full" // مثال لإضافة تنسيق العرض الكامل
+          >
+            {IsSigningUp ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="size-4 animate-spin" />{" "}
+                {/* تأكد من استيراد Loader2 من lucide-react */}
+                {isSignIn ? "Signing In..." : "Signing Up..."}
+              </div>
+            ) : isSignIn ? (
+              "Sign In"
+            ) : (
+              "Sign Up"
+            )}
+          </Button>
         </form>
       </Form>
       <p className="text-center text-base font-medium">

@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import "./globals.css";
 import { ReactNode } from "react";
@@ -6,6 +5,8 @@ import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import config from "@/lib/config";
+import { ImageKitProvider } from "@imagekit/next";
 const ibmPlexSans = localFont({
   src: [
     { path: "/fonts/IBMPlexSans-Regular.ttf", weight: "400", style: "normal" },
@@ -34,13 +35,16 @@ export default async function RootLayout({
   children: ReactNode;
 }>) {
   const session = await auth();
+
   return (
     <html lang="en">
       <SessionProvider session={session}>
         <body
           className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased`}
         >
-          {children}
+          <ImageKitProvider urlEndpoint={config.env.imageKit.urlEndpoint}>
+            {children}
+          </ImageKitProvider>
           <Toaster />
         </body>
       </SessionProvider>
