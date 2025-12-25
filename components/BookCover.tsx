@@ -40,7 +40,7 @@ export default function BookCover({
           src={coverUrl}
           alt="Book cover"
           fill
-          className="rounded-sm object-fill"
+          className="rounded-sm object-fill opacity-80"
           loading="lazy"
         />
       </div>
