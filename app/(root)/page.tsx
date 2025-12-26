@@ -4,8 +4,10 @@ import { sampleBooks } from "@/constants";
 import { db } from "@/database/drizzle";
 import { books } from "@/database/schema";
 import { desc } from "drizzle-orm";
+import { auth } from "@/auth";
 
 export default async function Home() {
+  const session = await auth();
   const latestBook = (await db
     .select()
     .from(books)
@@ -13,7 +15,7 @@ export default async function Home() {
     .orderBy(desc(books.createdAt))) as Book[];
   return (
     <div>
-      <BookOverview book={latestBook[0]} />
+      <BookOverview book={latestBook[0]} userId={session.user?.id as string} />
       <Booklist
         title="Latest Books"
         books={latestBook}

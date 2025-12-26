@@ -3,7 +3,7 @@ import BookCover from "./BookCover";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "./ui/button";
-const isLoanedBook = true;
+const isLoanedBook = false;
 const BookCard = ({ book }: { book: Book }) => (
   <li className={cn(isLoanedBook && "xs:w-52 w-full")}>
     <Link

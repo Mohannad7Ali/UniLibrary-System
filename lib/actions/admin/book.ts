@@ -2,6 +2,7 @@
 
 import { db } from "@/database/drizzle";
 import { books } from "@/database/schema";
+import { revalidatePath } from "next/cache";
 
 export const createBook = async (params: BookParams) => {
   try {
@@ -12,6 +13,8 @@ export const createBook = async (params: BookParams) => {
         availableCopies: params.totalCopies,
       })
       .returning();
+    revalidatePath("/admin/books");
+    revalidatePath("/");
     return {
       success: true,
       // data: JSON.parse(JSON.stringify(newBook[0])),

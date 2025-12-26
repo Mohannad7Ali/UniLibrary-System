@@ -1,8 +1,43 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
 import BookCover from "./BookCover";
+import BorrowBookButton from "./BorrowBookButton";
+import { db } from "@/database/drizzle";
+import { borrowRecords, users } from "@/database/schema";
+import { and, eq } from "drizzle-orm";
 
-export default function BookOverview({ book }: { book: Book }) {
+export default async function BookOverview({
+  book,
+  userId,
+}: {
+  book: Book;
+  userId: string;
+}) {
+  const [user] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  const isBorrowed =
+    (
+      await db
+        .select()
+        .from(borrowRecords)
+        .where(
+          and(
+            eq(borrowRecords.userId, userId),
+            eq(borrowRecords.bookId, book.id)
+          )
+        )
+    ).length > 0;
+  const borrowingEligibility = {
+    isEligible: book.availableCopies > 0 && user?.status === "ARRPOVED",
+    isBorrowed,
+    message:
+      book.availableCopies <= 0
+        ? "Book is not available"
+        : "You are not eligible to borrow this book",
+  };
   return (
     <section className="book-overview">
       <div className="flex flex-1 flex-col gap-5">
@@ -37,10 +72,11 @@ export default function BookOverview({ book }: { book: Book }) {
           </p>
         </div>
         <p className="book-description">{book.description}</p>
-        <Button className="book-overview_btn">
-          <Image src="/icons/book.svg" alt="book" width={20} height={20} />
-          <p className="font-bebas-neue text-xl text-dark-100 ">Borrow</p>
-        </Button>
+        <BorrowBookButton
+          userId={userId}
+          bookId={book.id}
+          borrowingEligibility={borrowingEligibility}
+        />
       </div>
       <div className="relative flex flex-1 justify-center">
         <div className="relative">
